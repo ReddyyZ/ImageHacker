@@ -3,7 +3,13 @@ from PIL.ExifTags import TAGS, GPSTAGS
 from colorama import Fore
 from time import sleep
 from include.converter import Converter
-import piexif, argparse, logging, rpycolors, os, textwrap, sys
+import piexif
+import argparse
+import logging
+import rpycolors
+import os
+import textwrap
+import sys
 
 old_print = print
 print = rpycolors.Console().print
@@ -20,7 +26,7 @@ green   = Fore.GREEN
 magenta = Fore.MAGENTA
 
 desc = textwrap.dedent("""
-                           ImageHacker - v1.0.0
+                           ImageHacker - v1.0.1
 
             Github: https://github.com/ReddyyZ/ImageHacker
             By: ReddyyZ
@@ -38,8 +44,8 @@ class Image(object):
         try:
             self.img  = PImage.open(self.filename)
             self.exif = piexif.load(self.img.info['exif'])
-        except:
-            logging.critical("Error opening image")
+        except Exception as err:
+            logging.critical("Error opening image: " + str(err))
             sys.exit(1)
 
     def get_geotagging(self,exif):
@@ -82,7 +88,7 @@ class Image(object):
                 if isinstance(data, bytes):
                     try:
                         data = data.decode()
-                    except:
+                    except Exception:
                         continue
 
                 if tag_id in camera_t or tag in camera_t:
@@ -105,18 +111,23 @@ class Image(object):
                     other[tag] = data
 
             print(f"\n{green}[+]{reset}Camera:")
-            for i in sorted(camera): print(f"    {i:26}: {camera[i]}")
+            for i in sorted(camera):
+                print(f"    {i:26}: {camera[i]}")
 
             print(f"\n{green}[+]{reset}About:")
-            for i in sorted(about): print(f"    {i:26}: {about[i]}")
+            for i in sorted(about):
+                print(f"    {i:26}: {about[i]}")
 
             if GPS_:
                 print(f"\n{green}[+]{reset}GPS:")
-                for i in sorted(gps): print(f"    {i:26}: {gps[i]}")
-                for i in k: print(f"    {i:26}: {k[i]}")
+                for i in sorted(gps):
+                    print(f"    {i:26}: {gps[i]}")
+                for i in k:
+                    print(f"    {i:26}: {k[i]}")
 
             print(f"\n{green}[+]{reset}Other:")
-            for i in sorted(other): print(f"    {i:26}: {other[i]}")
+            for i in sorted(other):
+                print(f"    {i:26}: {other[i]}")
 
         except Exception as err:
             logging.critical("Error extracting image data: "+str(err))
@@ -133,26 +144,26 @@ class Image(object):
                 self.exif["Exif"][piexif.ExifIFD.DateTimeOriginal]  = date
                 self.exif["Exif"][piexif.ExifIFD.DateTimeDigitized] = date
                 self.exif["0th"][piexif.ImageIFD.DateTime]          = date
-        except:
+        except Exception:
             logging.error("Error inserting date")
 
         try:
             if author:
                 self.exif["0th"][piexif.ImageIFD.Artist] = author
-        except:
+        except Exception:
             logging.error("Error inserting author info")
 
         try:
             if Copyright:
                 self.exif["0th"][piexif.ImageIFD.Copyright] = Copyright
-        except:
+        except Exception:
             logging.error("Error inserting copyright info")
 
         try:
             if gps:
                 latitude, longitude, altitude = gps.split(' ')
                 self.exif["GPS"] = self.insert_gps(latitude, longitude, altitude)
-        except:
+        except Exception:
             logging.error("Error inserting GPS data")
 
     def insert_camera(self,software=None,manufacturer=None,model=None):
@@ -167,7 +178,7 @@ class Image(object):
 
             if software:
                 self.exif["0th"][piexif.ImageIFD.Software] = software
-        except:
+        except Exception:
             logging.error("Error inserting camera details")
 
     def save(self):
@@ -176,8 +187,8 @@ class Image(object):
             exif_bytes = piexif.dump(self.exif)
             piexif.insert(exif_bytes, self.filename)
             logging.warn("File saved!")
-        except:
-            logging.critical("Error saving file")
+        except Exception as err:
+            logging.critical("Error saving file: " + str(err))
         
 
 def parse_arguments():
