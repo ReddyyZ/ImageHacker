@@ -6,7 +6,8 @@ class Converter(object):
         pass
 
     def get_coordinates(self,geotags):
-        if not geotags: raise ValueError("GPSInfo blank")
+        if not geotags:
+            raise ValueError("GPSInfo blank")
 
         lat = self.degress_to_decimal(geotags['GPSLatitude'], geotags['GPSLatitudeRef'])
         lon = self.degress_to_decimal(geotags['GPSLongitude'], geotags['GPSLongitudeRef'])
