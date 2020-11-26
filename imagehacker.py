@@ -31,7 +31,13 @@ desc = textwrap.dedent("""
             Github: https://github.com/ReddyyZ/ImageHacker
             By: ReddyyZ
     """)
-banner = lambda: clear();print(desc);print("[yellow][+][/yellow]Starting...");sleep(1)
+def banner():
+    clear()
+
+    print(desc)
+    print("[yellow][+][/yellow]Starting...")
+
+    sleep(1)
 
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
