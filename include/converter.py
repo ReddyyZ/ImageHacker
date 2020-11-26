@@ -43,9 +43,9 @@ class Converter(object):
         abs_value = abs(value)
         deg =  int(abs_value)
         t1 = (abs_value-deg)*60
-        min = int(t1)
-        sec = round((t1 - min)* 60, 5)
-        return (deg, min, sec, loc_value)
+        minutes = int(t1)
+        seconds = round((t1 - minutes)* 60, 5)
+        return (deg, minutes, seconds, loc_value)
 
 
     def change_to_rational(self,number):
