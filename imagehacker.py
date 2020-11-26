@@ -55,6 +55,10 @@ class Image(object):
             sys.exit(1)
 
     def get_geotagging(self,exif):
+        '''
+        Extract GPS Info and return
+        '''
+
         logging.debug("Getting GPS Info")
         geotagging = {}
         for (idx, tag) in TAGS.items():
@@ -152,6 +156,12 @@ class Image(object):
             logging.critical("Error extracting image data: "+str(err))
 
     def insert_gps(self,latitude_c,longitude_c,altitude):
+        '''
+        Converts coordinates to degress and return in
+        gps_ifd format, that can be used to edit GPS information
+        from an image.
+        '''
+
         latitude, logintude, gps_ifd = Converter().coordinates_to_degress(latitude_c,longitude_c,altitude)
         return gps_ifd
 
