@@ -31,7 +31,7 @@ desc = textwrap.dedent("""
             Github: https://github.com/ReddyyZ/ImageHacker
             By: ReddyyZ
     """)
-def banner(): clear();print(desc);print("[yellow][+][/yellow]Starting...");sleep(1)
+banner = lambda: clear();print(desc);print("[yellow][+][/yellow]Starting...");sleep(1)
 
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -93,20 +93,27 @@ class Image(object):
 
                 if tag_id in camera_t or tag in camera_t:
                     camera[tag] = data
+
                 elif tag_id in about_t or tag in about_t:
                     about[tag] = data
+
                 elif tag == "GPSInfo" or tag_id == "GPSInfo":
                     try:
                         x = self.get_geotagging(exif_)
                         k = Converter().get_coordinates(x)
-                        for i in x: gps[i] = x[i]
+
+                        for i in x:
+                            gps[i] = x[i]
                         GPS_ = True
+
                     except KeyError:
                         GPS_ = False
                         logging.error(f"Error getting GPS data: {red}GPSInfo blank!{reset}")
+
                     except Exception as err:
                         GPS_ = False
                         logging.error("Error getting GPS data: "+str(err))
+
                 else:
                     other[tag] = data
 
