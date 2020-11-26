@@ -12,3 +12,4 @@
 
 # ImageHacker [v1.0.1] - 2020-11-26
 - Code optimization
+- Updating README
