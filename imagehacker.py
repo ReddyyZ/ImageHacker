@@ -69,23 +69,27 @@ class Image(object):
 
 
     def extract(self):
+        '''
+        Extracts exif data, decodes it, and print
+
+        exif_ : Extracted EXIF data
+        
+        '''
+
         logging.info("Extracting image exif data")
         exif_ = self.img.getexif()
 
-        ImageIFD  = piexif.ImageIFD
-        ExifIFD   = piexif.ExifIFD
+        ImageIFD    = piexif.ImageIFD
+        ExifIFD     = piexif.ExifIFD
 
-        camera   = {}
-        camera_t = [ImageIFD.Make,ImageIFD.Model,ExifIFD.Flash,ExifIFD.FlashEnergy,ExifIFD.FocalLengthIn35mmFilm,ExifIFD.FocalLength,ExifIFD.ExposureTime,ExifIFD.ISOSpeed,ExifIFD.SubjectDistance,ImageIFD.Software,ExifIFD.CameraElevationAngle,ExifIFD.CameraOwnerName,ExifIFD.ExposureMode,ExifIFD.ExposureIndex,ExifIFD.ExposureProgram,ExifIFD.ExposureBiasValue,ExifIFD.ExposureIndex]
+        camera      = {}
+        camera_tags = [ImageIFD.Make,ImageIFD.Model,ExifIFD.Flash,ExifIFD.FlashEnergy,ExifIFD.FocalLengthIn35mmFilm,ExifIFD.FocalLength,ExifIFD.ExposureTime,ExifIFD.ISOSpeed,ExifIFD.SubjectDistance,ImageIFD.Software,ExifIFD.CameraElevationAngle,ExifIFD.CameraOwnerName,ExifIFD.ExposureMode,ExifIFD.ExposureIndex,ExifIFD.ExposureProgram,ExifIFD.ExposureBiasValue,ExifIFD.ExposureIndex]
 
-        about    = {}
-        about_t  = [ImageIFD.Artist,ImageIFD.Copyright,ImageIFD.DateTime,ExifIFD.DateTimeDigitized,ExifIFD.DateTimeOriginal,ExifIFD.UserComment,ExifIFD.MakerNote]
+        about       = {}
+        about_tags  = [ImageIFD.Artist,ImageIFD.Copyright,ImageIFD.DateTime,ExifIFD.DateTimeDigitized,ExifIFD.DateTimeOriginal,ExifIFD.UserComment,ExifIFD.MakerNote]
 
-        gps      = {}
-
-        other    = {}
-
-        
+        gps         = {}
+        other       = {}
 
         try:
             for tag_id in exif_:
@@ -99,19 +103,19 @@ class Image(object):
                         logging.error(f"Error decoding {tag}: "+str(err))
                         continue
 
-                if tag_id in camera_t or tag in camera_t:
+                if tag_id in camera_tags or tag in camera_tags:
                     camera[tag] = data
 
-                elif tag_id in about_t or tag in about_t:
+                elif tag_id in about_tags or tag in about_tags:
                     about[tag] = data
 
                 elif tag == "GPSInfo" or tag_id == "GPSInfo":
                     try:
-                        x = self.get_geotagging(exif_)
-                        k = Converter().get_coordinates(x)
+                        gps_ifd = self.get_geotagging(exif_)
+                        coordinates = Converter().get_coordinates(gps_ifd)
 
-                        for i in x:
-                            gps[i] = x[i]
+                        for i in gps_ifd:
+                            gps[i] = gps_ifd[i]
                         GPS_ = True
 
                     except KeyError:
@@ -137,8 +141,8 @@ class Image(object):
                 print(f"\n{green}[+]{reset}GPS:")
                 for i in sorted(gps):
                     print(f"    {i:26}: {gps[i]}")
-                for i in k:
-                    print(f"    {i:26}: {k[i]}")
+                for i in coordinates:
+                    print(f"    {i:26}: {coordinates[i]}")
 
             print(f"\n{green}[+]{reset}Other:")
             for i in sorted(other):
