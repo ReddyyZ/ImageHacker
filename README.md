@@ -1,6 +1,12 @@
 <h1 align="center">ImageHacker</h1>
 <p align="center">Tool for extract and edit exif image data! Developed in Python3 using <b>Pillow</b> and <b>piexif</b> libs.</p>
-<p align="center"></p>
+<p align="center">
+    <a href="https://www.codefactor.io/repository/github/reddyyz/imagehacker/overview/master"><img src="https://www.codefactor.io/repository/github/reddyyz/imagehacker/badge/master?s=f3cd2705a0047d9839623da6eab681a63e75e171" alt="CodeFactor" /></a>
+    <a href="https://github.com/ReddyyZ"><img src="https://img.shields.io/badge/Made%20by-ReddyyZ-red"></a>
+    <img src="https://img.shields.io/github/issues/ReddyyZ/ImageHacker">
+    <img src="https://img.shields.io/github/v/release/ReddyyZ/ImageHacker">
+    <img src="https://img.shields.io/github/last-commit/ReddyyZ/ImageHacker">
+</p>
 
 ## How to install
 - Clone the repo
