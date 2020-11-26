@@ -91,10 +91,12 @@ class Image(object):
             for tag_id in exif_:
                 tag = TAGS.get(tag_id, tag_id)
                 data = exif_.get(tag_id)
+                
                 if isinstance(data, bytes):
                     try:
                         data = data.decode()
-                    except Exception:
+                    except Exception as err:
+                        logging.error(f"Error decoding {tag}: "+str(err))
                         continue
 
                 if tag_id in camera_t or tag in camera_t:
